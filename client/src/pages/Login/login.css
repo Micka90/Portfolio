@@ -1,0 +1,13 @@
+/* desktop */
+
+.logininput {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+}
+
+.inputlogin {
+  width: 30%;
+  margin: 10px;
+}

@@ -1,0 +1,31 @@
+/* Desktop */
+
+.navlist {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+  border: solid 1px red;
+}
+
+.navproject {
+  color: #000;
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.navicone {
+  display: flex;
+  gap: 5%;
+  margin-right: 10px;
+}
+
+.iconenav {
+  color: black;
+  font-size: 30px;
+}

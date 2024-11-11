@@ -1,0 +1,13 @@
+/* desktop */
+
+.addproject {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+}
+
+.projectadd {
+  width: 30%;
+  margin: 10px;
+}

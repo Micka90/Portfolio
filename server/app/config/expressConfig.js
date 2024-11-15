@@ -10,7 +10,7 @@ app.use(corsConfig);
 app.use(express.json());
 
 // Ajoutez ici d'autres middlewares si nécessaire
-// const cookieParser = require("cookie-parser");
-// app.use(cookieParser());
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 module.exports = app;

@@ -7,7 +7,7 @@ function Login() {
   const passwordRef = useRef();
   const { setAuth } = useAuth();
   const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false); // État de succès
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -37,16 +37,16 @@ function Login() {
         const token = response.headers.get('Authorization');
         const user = await response.json();
         setAuth({ token, user });
-        setSuccess(true); // Définir l'état de succès à `true`
-        setError(false); // Réinitialiser l'état d'erreur
+        setSuccess(true);
+        setError(false);
       } else {
         setError('Email ou mot de passe incorrect');
-        setSuccess(false); // Réinitialiser l'état de succès
+        setSuccess(false);
         console.info(response);
       }
     } catch (err) {
       setError('Une erreur est survenue, veuillez réessayer');
-      setSuccess(false); // Réinitialiser l'état de succès
+      setSuccess(false);
       console.error(err);
     }
   };
@@ -54,8 +54,18 @@ function Login() {
   return (
     <section>
       <form className="logininput" onSubmit={handleSubmit}>
-        <input className="inputlogin" type="email" ref={mailRef} placeholder="Email" />
-        <input className="inputlogin" type="password" ref={passwordRef} placeholder="Mot de passe" />
+        <input
+          className="inputlogin"
+          type="email"
+          ref={mailRef}
+          placeholder="Email"
+        />
+        <input
+          className="inputlogin"
+          type="password"
+          ref={passwordRef}
+          placeholder="Mot de passe"
+        />
         <button type="submit">Login</button>
         {success && <p className="success-message">Connexion réussie !</p>}
         {error && <p className="error-message">{error}</p>}

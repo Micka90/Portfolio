@@ -1,31 +1,36 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter } from 'react-router-dom';
 
-import App from "./App";
-import HomePage from "./pages/Home/HomePage";
-import Login from "./pages/Login/Login";
-import Admin from "./pages/Admin/Admin";
-import Project from "./pages/Project/Project";
+import App from './App';
+import HomePage from './pages/Home/HomePage';
+import Login from './pages/Login/Login';
+import Admin from './pages/Admin/Admin';
+import Project from './pages/Project/Project';
+import AdminRoute from './components/auth/AdminRoute';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: <HomePage />,
       },
       {
-        path: "/Project",
+        path: '/Project',
         element: <Project />,
       },
       {
-        path: "/Login",
+        path: '/Login',
         element: <Login />,
       },
       {
-        path: "/Admin",
-        element: <Admin />,
+        path: '/Admin',
+        element: (
+          <AdminRoute>
+            <Admin />
+          </AdminRoute>
+        ),
       },
     ],
   },

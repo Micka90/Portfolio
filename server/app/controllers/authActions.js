@@ -5,31 +5,41 @@ const tables = require('../../database/tables');
 
 const login = async (req, res, next) => {
   try {
-    console.log('Données reçues :', req.body);
-
-    // Vérifiez si l'utilisateur est trouvé dans la base de données
     const user = await tables.user.readByEmailWithPassword(req.body.email);
-    console.log('Utilisateur trouvé :', user);
 
-    if (user == null) {
-      console.log('Aucun utilisateur trouvé avec cet email.');
+    if (user == null) {S
       res.sendStatus(422);
       return;
     }
 
-    // Vérifiez le mot de passe
     const verified = await argon2.verify(user.password, req.body.password);
-    console.log('Mot de passe vérifié :', verified);
 
     if (verified) {
       delete user.password;
-      const token = await jwt.sign(
-        { id: user.Id_user, isAdmin: user.is_admin },
+
+      const accessToken = jwt.sign(
+        { id: user.iduser, isAdmin: user.is_admin },
         process.env.APP_SECRET,
         { expiresIn: '1h' }
       );
 
-      res.status(200).header('Authorization', token).json(user);
+      const refreshToken = jwt.sign(
+        { id: user.iduser, isAdmin: user.is_admin },
+        process.env.APP_SECRET,
+        { expiresIn: '1d' }
+      );
+
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production', // Seulement en HTTPS en production
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      });
+
+      res
+        .status(200)
+        .header('Authorization', `Bearer ${accessToken}`)
+        .json(user);
     } else {
       console.log('Mot de passe incorrect');
       res.sendStatus(422);

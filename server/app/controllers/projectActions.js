@@ -1,25 +1,28 @@
-const table = require('../../database/tables');
-const upload = require('../services/fileUpload');
+const tables = require('../../database/tables');
 
 const add = async (req, res, next) => {
   try {
-    // Vérifiez si un fichier a été téléchargé
-    if (!req.file) {
-      return res.status(400).send('No file uploaded');
-    }
+    console.log("req.file:", req.file); // Log pour vérifier le fichier
 
-    // Ajoutez le chemin du fichier téléchargé à la requête pour le stocker en base de données
-    const createProject = {
-      ...req.body,
-      image: `/uploads/${req.file.filename}`, // Chemin de l'image sauvegardée
+    const uploadDest = `${process.env.APP_HOST}/uploads/`;
+    const projectData = {
+      name: req.body.title, // Titre du frontend mappé à "name"
+      description: req.body.description,
+      project_image: req.file ? `${uploadDest}${req.file.filename}` : null, // Chemin complet de l'image
+      userId: req.auth ? req.auth.id : 1, // Utilisateur par défaut
     };
 
-    const result = await table.Project.add(createProject);
+    console.log("Mapped projectData:", projectData);
+
+    const result = await tables.Project.add(projectData);
     res.status(201).json(result);
   } catch (err) {
+    console.error("Error:", err);
     next(err);
   }
 };
+
+
 
 module.exports = { add };
 

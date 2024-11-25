@@ -4,11 +4,11 @@ class UserRepository {
   }
 
   async add(user) {
-    const result = await this.database.query(
+    const [result] = await this.database.query(
       'INSERT INTO user (name, email, password, is_admin) VALUES (?, ?, ?, ?)',
       [user.name, user.email, user.hashedPassword, user.is_admin]
     );
-    return result;
+    return [result];
   }
 
   async readByEmailWithPassword(email) {

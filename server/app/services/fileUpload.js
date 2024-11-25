@@ -1,21 +1,16 @@
-const multer = require('multer');
-const path = require('path');
-
-const filetypes = ['image/jpeg', 'image/png', 'image/jpg'];
+const multer = require("multer");
+const path = require("path");
 
 const storage = multer.diskStorage({
-  destination: path.join(__dirname, '../../public/uploads'),
-  filename: (_, file, cb) => {
-    if (filetypes.includes(file.mimetype)) {
-      cb(null, `${Date.now()}-${file.originalname}`);
-    } else {
-      cb(new Error('File type is not supported'));
-    }
+  destination: path.join(__dirname, "../public/uploads"),
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`); // Nom unique pour chaque fichier
   },
 });
 
-module.exports = multer({
+const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // Limite de taille de fichier : 10 MB
+  limits: { fileSize: 10 * 1024 * 1024 }, // Limite de 10MB
 });
 
+module.exports = upload;

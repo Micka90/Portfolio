@@ -1,5 +1,5 @@
-import { createContext, useState, useContext, useMemo, useEffect } from "react";
-import PropTypes from "prop-types";
+import { createContext, useState, useContext, useMemo, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const AuthContext = createContext();
 
@@ -12,10 +12,10 @@ export function AuthProvider({ children }) {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/api/user/refresh`,
-          { credentials: "include" }
+          { credentials: 'include' }
         );
         if (response.ok) {
-          const token = response.headers.get("Authorization");
+          const token = response.headers.get('Authorization');
           const user = await response.json();
           setAuth({ user, token });
           setIsLoading(false);
@@ -23,7 +23,6 @@ export function AuthProvider({ children }) {
           setIsLoading(false);
         }
       } catch {
-        
         setIsLoading(false);
       }
     };

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import './login.css';
+import './Login.css';
 
 function Login() {
   const mailRef = useRef();
@@ -36,13 +36,12 @@ function Login() {
       if (response.status === 200) {
         const token = response.headers.get('Authorization');
         const user = await response.json();
-        setAuth({ token, user });
-        setSuccess(true);
+        setAuth({ user, token });
         setError(false);
+        setSuccess(true);
       } else {
         setError('Email ou mot de passe incorrect');
         setSuccess(false);
-        console.info(response);
       }
     } catch (err) {
       setError('Une erreur est survenue, veuillez réessayer');

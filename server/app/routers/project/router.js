@@ -1,10 +1,13 @@
 const express = require('express');
-const { add } = require('../controllers/projectActions');
-const upload = require('../services/fileUpload'); // Import du middleware
 
 const router = express.Router();
 
-// Ajoutez le middleware `upload` à la route POST
-router.post('/', upload.single('image'), add);
+const { verifyToken } = require('../../services/auth');
+
+const { add } = require('../../controllers/projectActions');
+
+const upload = require('../../services/fileUpload');
+
+router.post('/', upload.single('project_image'), add); // `single` pour un fichier unique
 
 module.exports = router;

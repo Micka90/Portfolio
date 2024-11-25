@@ -7,6 +7,8 @@ const corsOptions = {
     ],
     credentials: true, 
     optionsSuccessStatus: 200,
+    exposedHeaders: ["Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization"], 
 };
 
 module.exports = cors(corsOptions);

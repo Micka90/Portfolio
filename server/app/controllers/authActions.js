@@ -7,13 +7,12 @@ const login = async (req, res, next) => {
   try {
     const user = await tables.user.readByEmailWithPassword(req.body.email);
 
-    if (user == null) {S
+    if (user == null) {
       res.sendStatus(422);
       return;
     }
 
     const verified = await argon2.verify(user.password, req.body.password);
-
     if (verified) {
       delete user.password;
 
@@ -32,7 +31,7 @@ const login = async (req, res, next) => {
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production', // Seulement en HTTPS en production
+        secure: process.env.NODE_ENV === 'production',
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       });
 
@@ -41,7 +40,6 @@ const login = async (req, res, next) => {
         .header('Authorization', `Bearer ${accessToken}`)
         .json(user);
     } else {
-      console.log('Mot de passe incorrect');
       res.sendStatus(422);
     }
   } catch (err) {
@@ -52,32 +50,43 @@ const login = async (req, res, next) => {
 
 const refresh = async (req, res, next) => {
   try {
+    // Vérifier si le cookie refreshToken existe
     const { refreshToken } = req.cookies;
     if (!refreshToken) {
-      return res.status(401).send('Access Denied, No refresh token provided.');
+      console.error("Refresh token missing in cookies");
+      return res.status(401).send("No refresh token provided.");
     }
 
-    const decoded = jwt.verify(refreshToken, process.env.APP_SECRET);
+    // Tenter de décoder le token
+    let decoded;
+    try {
+      decoded = jwt.verify(refreshToken, process.env.APP_SECRET);
+    } catch (err) {
+      console.error("Failed to verify refresh token:", err.message);
+      return res.status(401).send("Invalid refresh token.");
+    }
+
+    console.log("Refresh token decoded:", decoded);
+
+    // Vérifier si l'utilisateur existe
     const user = await tables.user.read(decoded.id);
-
     if (!user) {
-      return res.status(404).send('User not found');
+      console.error("User not found with ID:", decoded.id);
+      return res.status(404).send("User not found.");
     }
 
-    delete user.password;
-
+    // Générer un nouveau access token
     const accessToken = jwt.sign(
       { id: user.iduser, isAdmin: user.is_admin },
       process.env.APP_SECRET,
-      {
-        expiresIn: '1h',
-      }
+      { expiresIn: '1h' }
     );
 
+    console.log("Access token successfully refreshed for user ID:", user.iduser);
     return res.header('Authorization', `Bearer ${accessToken}`).json(user);
   } catch (error) {
-    console.error('Erreur dans la fonction refresh :', error);
-    return res.status(401).send('Invalid refresh token');
+    console.error("Unexpected error in refresh:", error.message);
+    return res.status(500).send("Internal server error.");
   }
 };
 

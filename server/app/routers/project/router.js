@@ -8,6 +8,6 @@ const { add } = require('../../controllers/projectActions');
 
 const upload = require('../../services/fileUpload');
 
-router.post('/', upload.single('project_image'), add); // `single` pour un fichier unique
+router.post('/', upload.single('project_image'), add); 
 
 module.exports = router;

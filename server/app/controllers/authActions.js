@@ -50,14 +50,12 @@ const login = async (req, res, next) => {
 
 const refresh = async (req, res, next) => {
   try {
-    // Vérifier si le cookie refreshToken existe
     const { refreshToken } = req.cookies;
     if (!refreshToken) {
       console.error("Refresh token missing in cookies");
       return res.status(401).send("No refresh token provided.");
     }
 
-    // Tenter de décoder le token
     let decoded;
     try {
       decoded = jwt.verify(refreshToken, process.env.APP_SECRET);
@@ -68,14 +66,12 @@ const refresh = async (req, res, next) => {
 
     console.log("Refresh token decoded:", decoded);
 
-    // Vérifier si l'utilisateur existe
     const user = await tables.user.read(decoded.id);
     if (!user) {
       console.error("User not found with ID:", decoded.id);
       return res.status(404).send("User not found.");
     }
 
-    // Générer un nouveau access token
     const accessToken = jwt.sign(
       { id: user.iduser, isAdmin: user.is_admin },
       process.env.APP_SECRET,

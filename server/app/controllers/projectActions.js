@@ -2,14 +2,14 @@ const tables = require('../../database/tables');
 
 const add = async (req, res, next) => {
   try {
-    console.log("req.file:", req.file); // Log pour vérifier le fichier
+    console.log("req.file:", req.file); // 
 
     const uploadDest = `${process.env.APP_HOST}/uploads/`;
     const projectData = {
-      name: req.body.title, // Titre du frontend mappé à "name"
+      name: req.body.title, 
       description: req.body.description,
-      project_image: req.file ? `${uploadDest}${req.file.filename}` : null, // Chemin complet de l'image
-      userId: req.auth ? req.auth.id : 1, // Utilisateur par défaut
+      project_image: req.file ? `${uploadDest}${req.file.filename}` : null, 
+      userId: req.auth ? req.auth.id : 1, 
     };
 
     console.log("Mapped projectData:", projectData);

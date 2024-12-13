@@ -1,6 +1,6 @@
-const argon2 = require("argon2");
+const argon2 = require('argon2');
 
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
 const hashingOptions = {
   type: argon2.argon2id,
@@ -12,14 +12,9 @@ const hashingOptions = {
 const hashPassword = async (req, res, next) => {
   try {
     const { password } = req.body;
-    // Hachage du mot de passe avec Argon2 et les options de hachage spécifiées
     const hashedPassword = await argon2.hash(password, hashingOptions);
-    // Remplacement du mot de passe en clair par la version hachée
     req.body.hashedPassword = hashedPassword;
-    // Suppression du mot de passe en clair du corps de la requête pour
-    // des raisons de sécurité
     delete req.body.password;
-    // Passage au middleware suivant
     next();
   } catch (err) {
     next(err);
@@ -28,24 +23,18 @@ const hashPassword = async (req, res, next) => {
 
 const verifyToken = (req, res, next) => {
   try {
-    const authorizationHeader = req.get("Authorization");
-
+    const authorizationHeader = req.get('Authorization');
     if (authorizationHeader == null) {
-      throw new Error("Authorization header is missing");
+      throw new Error('Authorization header is missing');
     }
-
-    const [type, token] = authorizationHeader.split(" ");
-
-    if (type !== "Bearer") {
+    const [type, token] = authorizationHeader.split(' ');
+    if (type !== 'Bearer') {
       throw new Error("Authorization header has not the 'Bearer' type");
     }
-
     req.auth = jwt.verify(token, process.env.APP_SECRET);
-
     next();
   } catch (err) {
     console.error(err);
-
     res.sendStatus(401);
   }
 };

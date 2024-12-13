@@ -9,7 +9,6 @@ function Admin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // FormData to handle file upload
     const formData = new FormData();
     formData.append('title', title);
     formData.append('description', description);

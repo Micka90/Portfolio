@@ -6,8 +6,8 @@ function AdminRoute({ children }) {
 
   if (!auth || !auth.user.is_admin) {
     <div>
-      Accès refusé. Vous n&apos;avez pas les droits nécessaires pour accéder à
-      cette page.
+      Accès refusé. Vous n&apos;avez pas les droits nécessaires pour accéder à cette
+      page.
     </div>;
   }
   return children;

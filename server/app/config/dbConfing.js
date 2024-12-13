@@ -1,4 +1,4 @@
-const mysql = require("mysql2/promise");
+const mysql = require('mysql2/promise');
 
 const dbConfig = {
   host: process.env.DB_HOST,
@@ -11,4 +11,3 @@ const dbConfig = {
 const pool = mysql.createPool(dbConfig);
 
 module.exports = pool;
-

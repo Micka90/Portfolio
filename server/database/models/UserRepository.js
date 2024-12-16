@@ -14,7 +14,8 @@ class UserRepository {
   async readByEmailWithPassword(email) {
     console.log('Email recherché :', email);
     const [rows] = await this.database.query(
-      `SELECT * FROM user WHERE email = 'mickael.beaugrand@outlook.fr'`
+      `SELECT * FROM user WHERE email = ?`,
+      [email]
     );
     console.log('Résultat de la requête SQL :', rows);
     return rows[0];

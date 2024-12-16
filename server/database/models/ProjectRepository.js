@@ -11,6 +11,14 @@ class ProjectRepository {
     );
     return result;
   }
+
+  async getAll() {
+    const [rows] = await this.database.query('SELECT * FROM Project');
+    return rows; 
+  }
 }
+
+ 
+
 
 module.exports = ProjectRepository;

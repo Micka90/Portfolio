@@ -1,5 +1,7 @@
-import "./HomePage.css";
-import Avatar from "../../assets/avatar.png";
+import './HomePage.css';
+import Avatar from '../../assets/avatar.png';
+
+import ProjectCard from '../../components/ProjectCard/ProjectCard';
 
 function HomePage() {
   return (
@@ -23,6 +25,7 @@ function HomePage() {
           est deserunt aperiam. Et distinctio blanditiis non aperiam illum a
           fugiat expedita qui consequuntur autem vel temporibus ullam.
         </p>
+        <ProjectCard />
       </section>
     </div>
   );

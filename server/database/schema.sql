@@ -36,8 +36,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `Portfolio`.`Project` (
   `idProject` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `description` VARCHAR(45) NOT NULL,
-  `image` VARCHAR(45) NOT NULL,
+  `description` TEXT NOT NULL,
+  `image` TEXT NOT NULL,
   `user_iduser` INT NOT NULL,
   PRIMARY KEY (`idProject`, `user_iduser`),
   INDEX `fk_Project_user_idx` (`user_iduser` ASC) VISIBLE,

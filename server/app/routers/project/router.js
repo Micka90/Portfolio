@@ -2,8 +2,14 @@ const express = require('express');
 
 const router = express.Router();
 
-const { add } = require('../../controllers/projectActions');
+// const { verifyToken } = require('../../services/auth');
 
-router.post('/', add);
+const { add,getAll,getOne } = require('../../controllers/projectActions');
+
+const upload = require('../../services/fileUpload');
+
+router.post('/', upload.single('project_image'), add);
+router.get('/:id', getOne);
+router.get('/', getAll);
 
 module.exports = router;

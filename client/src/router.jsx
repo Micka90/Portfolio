@@ -5,6 +5,7 @@ import HomePage from './pages/Home/HomePage';
 import Login from './pages/Login/Login';
 import Admin from './pages/Admin/Admin';
 import Project from './pages/Project/Project';
+import ProjectDétail from './pages/ProjectDétail/Projectdétail';
 import AdminRoute from './components/auth/AdminRoute';
 
 const router = createBrowserRouter([
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: '/Project',
         element: <Project />,
+      },
+      {
+        path: '/Project/:id',
+        element: <ProjectDétail />,
       },
       {
         path: '/Login',

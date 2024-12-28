@@ -8,7 +8,7 @@ const app = express();
 app.use(corsConfig);
 
 app.use((req, res, next) => {
-  console.log('Middleware CORS appliqué');
+  // console.log('Middleware CORS appliqué');
   next();
 });
 
@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "../../public/uploads")));
 
 app.use((req, res, next) => {
-  console.log('Cookies reçus :', req.cookies);
+  // console.log('Cookies reçus :', req.cookies);
   next();
 });
 

@@ -52,24 +52,24 @@ const refresh = async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies;
     if (!refreshToken) {
-      console.error("Refresh token missing in cookies");
-      return res.status(401).send("No refresh token provided.");
+      console.error('Refresh token missing in cookies');
+      return res.status(401).send('No refresh token provided.');
     }
 
     let decoded;
     try {
       decoded = jwt.verify(refreshToken, process.env.APP_SECRET);
     } catch (err) {
-      console.error("Failed to verify refresh token:", err.message);
-      return res.status(401).send("Invalid refresh token.");
+      console.error('Failed to verify refresh token:', err.message);
+      return res.status(401).send('Invalid refresh token.');
     }
 
-    console.log("Refresh token decoded:", decoded);
+    // console.log("Refresh token decoded:", decoded);
 
     const user = await tables.user.read(decoded.id);
     if (!user) {
-      console.error("User not found with ID:", decoded.id);
-      return res.status(404).send("User not found.");
+      console.error('User not found with ID:', decoded.id);
+      return res.status(404).send('User not found.');
     }
 
     const accessToken = jwt.sign(
@@ -78,11 +78,11 @@ const refresh = async (req, res, next) => {
       { expiresIn: '1h' }
     );
 
-    console.log("Access token successfully refreshed for user ID:", user.iduser);
+    // console.log("Access token successfully refreshed for user ID:", user.iduser);
     return res.header('Authorization', `Bearer ${accessToken}`).json(user);
   } catch (error) {
-    console.error("Unexpected error in refresh:", error.message);
-    return res.status(500).send("Internal server error.");
+    console.error('Unexpected error in refresh:', error.message);
+    return res.status(500).send('Internal server error.');
   }
 };
 

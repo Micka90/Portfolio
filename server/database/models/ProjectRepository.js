@@ -12,6 +12,11 @@ class ProjectRepository {
     return result;
   }
 
+  async getOne(id) {
+    const [result] = await this.database.query('SELECT * FROM Project WHERE idProject = ?', [id]);
+    return result[0];
+  }
+
   async getAll() {
     const [rows] = await this.database.query('SELECT * FROM Project');
     return rows; 

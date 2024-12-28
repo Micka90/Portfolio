@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ProjectCard.css';
 
 const ProjectCards = () => {
   const [projects, setProjects] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('http://localhost:3310/api/project')
@@ -12,17 +14,22 @@ const ProjectCards = () => {
       })
       .catch((error) => console.error('Erreur API :', error));
   }, []);
+
+  const handlecardClick = (id) => {
+    navigate(`/Project/${id}`);
+  };
+
   return (
     <div className="card-container">
       {projects.length > 0 ? (
         projects.map((project) => (
-          <div key={project.idProject} className="card">
-            <img
-              src={project.image}
-              alt={project.name}
-            />
+          <div
+            key={project.idProject}
+            className="card"
+            onClick={() => handlecardClick(project.idProject)}
+          >
+            <img src={project.image} alt={project.name} />
             <h3>{project.name}</h3>
-            <p>{project.description}</p>
           </div>
         ))
       ) : (

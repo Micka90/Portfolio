@@ -12,7 +12,7 @@ class UserRepository {
   }
 
   async readByEmailWithPassword(email) {
-    console.log('Email recherché :', email);
+    // console.log('Email recherché :', email);
     const [rows] = await this.database.query(
       `SELECT * FROM user WHERE email = ?`,
       [email]

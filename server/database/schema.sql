@@ -11,9 +11,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema Portfolio
 -- -----------------------------------------------------
 
--- -----------------------------------------------------
--- Schema Portfolio
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `Portfolio` DEFAULT CHARACTER SET utf8 ;
 USE `Portfolio` ;
 
@@ -29,7 +26,6 @@ CREATE TABLE IF NOT EXISTS `Portfolio`.`user` (
   PRIMARY KEY (`iduser`))
 ENGINE = InnoDB;
 
-
 -- -----------------------------------------------------
 -- Table `Portfolio`.`Project`
 -- -----------------------------------------------------
@@ -38,6 +34,8 @@ CREATE TABLE IF NOT EXISTS `Portfolio`.`Project` (
   `name` VARCHAR(45) NOT NULL,
   `description` TEXT NOT NULL,
   `image` TEXT NOT NULL,
+  `repoGitHub` VARCHAR(255) NULL,
+  `projectLink` VARCHAR(255) NULL,
   `user_iduser` INT NOT NULL,
   PRIMARY KEY (`idProject`, `user_iduser`),
   INDEX `fk_Project_user_idx` (`user_iduser` ASC) VISIBLE,
@@ -47,3 +45,7 @@ CREATE TABLE IF NOT EXISTS `Portfolio`.`Project` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

@@ -3,14 +3,17 @@ class ProjectRepository {
     this.database = database;
   }
   async add(project) {
-    const { name, description, project_image, userId } = project;
-    console.log('SQL Parameters:', [name, description, project_image, userId]);
+    const { name, description, project_image, userId, repoGitHub, projectLink } = project;
     const result = await this.database.query(
-      `INSERT INTO Project (name, description, image, user_iduser) VALUES (?, ?, ?, ?)`,
-      [name, description, project_image, userId]
+      `INSERT INTO Project (name, description, image, user_iduser, repoGitHub, projectLink) VALUES (?, ?, ?, ?, ?, ?)`,
+      [name, description, project_image, userId, repoGitHub || 'Non spécifié', projectLink || 'Non spécifié']
     );
+  
+    console.log('Database Result:', result);
     return result;
   }
+  
+
 
   async getOne(id) {
     const [result] = await this.database.query('SELECT * FROM Project WHERE idProject = ?', [id]);

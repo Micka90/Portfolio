@@ -5,7 +5,7 @@ import HomePage from './pages/Home/HomePage';
 import Login from './pages/Login/Login';
 import Admin from './pages/Admin/Admin';
 import Project from './pages/Project/Project';
-import ProjectDétail from './pages/ProjectDétail/Projectdétail';
+import ProjectDétail from './pages/Project/Projectdétail';
 import AdminRoute from './components/auth/AdminRoute';
 
 const router = createBrowserRouter([

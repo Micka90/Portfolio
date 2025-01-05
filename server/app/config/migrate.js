@@ -5,7 +5,6 @@ const path = require('node:path');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 
 const schemaPath = path.join(__dirname, '../../database/schema.sql');
-// console.log('Schema path:', schemaPath);
 
 const schema = fs.readFileSync(schemaPath, 'utf8');
 

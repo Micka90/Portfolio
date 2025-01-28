@@ -2,27 +2,48 @@ const AbstractSeeder = require('./AbstractSeeder');
 
 class ProjectSeeder extends AbstractSeeder {
   dependencies() {
-    return []; 
+    return [];
   }
 
   async run() {
+    const baseUrl = process.env.APP_HOST || 'http://localhost:3000';
     const projects = [
       {
-        name: 'Project 1',
-        description: 'Description for project 1',
-        project_image: 'https://via.placeholder.com/150',
-        userId: 1, 
-        repoGitHub: 'https://github.com/user/project1',
-        projectLink: 'https://project1.example.com',
+        name: 'GEMS',
+        description:
+          'Gems est une plateforme de revente de bijoux en ligne. Elle permet aux utilisateurs de vendre et d’acheter des bijoux d’occasion.',
+        project_image: `${baseUrl}/uploads/GEMS.png`,
+        userId: 1,
+        repoGitHub: 'https://github.com/Micka90/P3-Gems',
+        projectLink: 'https://gems-gems.fr/',
       },
       {
-        name: 'Project 2',
-        description: 'Description for project 2',
-        project_image: 'https://via.placeholder.com/150',
-        userId: 1, 
-        repoGitHub: 'https://github.com/user/project2',
-        projectLink: 'https://project2.example.com',
+        name: 'Film Fusion',
+        description:
+          'Film Fusion est une plateforme dédiée au cinéma, permettant aux utilisateurs de découvrir, partager et discuter de films. Elle offre une interface intuitive pour explorer les dernières sorties, accéder à des informations détaillées sur les films, et interagir avec une communauté de cinéphiles.',
+        project_image: `${baseUrl}/uploads/Film-fusion.png`,
+        userId: 1,
+        repoGitHub: 'https://github.com/Micka90/-P2-FilmFusion',
+        projectLink: 'https://p2-film-fusion-client.vercel.app/',
       },
+      // {
+      //   name: 'GEMS',
+      //   description:
+      //     'Gems est une plateforme de revente de bijoux en ligne. Elle permet aux utilisateurs de vendre et d’acheter des bijoux d’occasion.',
+      //   project_image: `${baseUrl}/uploads/GEMS.png`,
+      //   userId: 1,
+      //   repoGitHub: 'https://github.com/Micka90/P3-Gems',
+      //   projectLink: 'https://gems-gems.fr/',
+      // },
+      // {
+      //   name: 'Film Fusion',
+      //   description:
+      //     'Film Fusion est une plateforme dédiée au cinéma, permettant aux utilisateurs de découvrir, partager et discuter de films. Elle offre une interface intuitive pour explorer les dernières sorties, accéder à des informations détaillées sur les films, et interagir avec une communauté de cinéphiles.',
+      //   project_image: `${baseUrl}/uploads/Film-fusion.png`,
+      //   userId: 1,
+      //   repoGitHub: 'https://github.com/Micka90/-P2-FilmFusion',
+      //   projectLink: 'https://p2-film-fusion-client.vercel.app/',
+      // },
     ];
 
     for (const project of projects) {
@@ -39,7 +60,6 @@ class ProjectSeeder extends AbstractSeeder {
         ]
       );
     }
-
   }
 }
 

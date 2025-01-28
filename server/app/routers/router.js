@@ -10,9 +10,13 @@ const userRouter = require('./user/router');
 
 const projectRouter = require('./project/router');
 
+const stackRouter = require('./stack/router');
+
 router.use('/user', userRouter);
 
 router.use('/project', projectRouter);
+
+router.use('/stack', stackRouter);
 
 /* ************************************************************************* */
 

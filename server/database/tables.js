@@ -4,6 +4,7 @@ const database = require('./client');
 
 const UserRepository = require('./models/UserRepository');
 const ProjectRepository = require('./models/ProjectRepository');
+const StackRepository = require('./models/StackRepository');
 
 // Create an empty object to hold data repositories for different tables
 const tables = {};
@@ -17,6 +18,9 @@ const tables = {};
 tables.user = new UserRepository(database);
 
 tables.Project = new ProjectRepository(database);
+
+tables.Stack = new StackRepository(database);
+
 
 /* ************************************************************************* */
 

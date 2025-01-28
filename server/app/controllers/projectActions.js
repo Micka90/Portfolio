@@ -21,6 +21,21 @@ const add = async (req, res, next) => {
   }
 };
 
+const addStacksToProject = async (req, res, next) => {
+  try {
+    const { idProject, stackIds } = req.body; 
+    for (const idStack of stackIds) {
+      await tables.database.query(
+        'INSERT INTO Project_Stack (idProject, idStack) VALUES (?, ?)',
+        [idProject, idStack]
+      );
+    }
+    res.status(200).json({ message: 'Stacks ajoutées au projet' });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const getOne = async (req, res, next) => {
   try {
     const result = await tables.Project.getOne(req.params.id);
@@ -41,4 +56,4 @@ const getAll = async (req, res, next) => {
   }
 };
 
-module.exports = { add, getAll, getOne };
+module.exports = { add, getAll, getOne, addStacksToProject };

@@ -18,6 +18,10 @@ app.use(cookieParser());
 
 app.use("/uploads", express.static(path.join(__dirname, "../../public/uploads")));
 
+app.use('/public', express.static(path.join(__dirname, '../../public')));
+
+
+
 app.use((req, res, next) => {
   // console.log('Cookies reçus :', req.cookies);
   next();

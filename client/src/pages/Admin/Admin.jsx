@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Admin.css';
 
 function Admin() {
@@ -7,7 +7,38 @@ function Admin() {
   const [file, setFile] = useState(null);
   const [projectLink, setProjectLink] = useState('');
   const [repoGitHub, setRepoGitHub] = useState('');
+  const [stacks, setStacks] = useState([]); // Liste des stacks disponibles
+  const [selectedStacks, setSelectedStacks] = useState([]); // IDs des stacks sélectionnées
 
+  // Charger les stacks disponibles depuis l'API
+  useEffect(() => {
+    const fetchStacks = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/stack`);
+        if (response.ok) {
+          const data = await response.json();
+          setStacks(data);
+        } else {
+          console.error('Failed to fetch stacks');
+        }
+      } catch (error) {
+        console.error('Error fetching stacks:', error);
+      }
+    };
+
+    fetchStacks();
+  }, []);
+
+  // Gérer la sélection/désélection d'une stack
+  const handleStackChange = (idStack) => {
+    setSelectedStacks((prevSelected) =>
+      prevSelected.includes(idStack)
+        ? prevSelected.filter((id) => id !== idStack) // Retirer si déjà sélectionné
+        : [...prevSelected, idStack] // Ajouter si non sélectionné
+    );
+  };
+
+  // Soumettre le formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -18,15 +49,16 @@ function Admin() {
     formData.append('project_link', projectLink || 'Non spécifié');
     formData.append('repo_github', repoGitHub || 'Non spécifié');
 
+    // Ajouter les IDs des stacks sélectionnées
+    selectedStacks.forEach((stackId) => {
+      formData.append('stackIds[]', stackId);
+    });
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/project`,
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/project`, {
+        method: 'POST',
+        body: formData,
+      });
 
       if (response.ok) {
         alert('Project added successfully!');
@@ -35,6 +67,7 @@ function Admin() {
         setFile(null);
         setProjectLink('');
         setRepoGitHub('');
+        setSelectedStacks([]); // Réinitialiser la sélection
       } else {
         alert('Failed to add project.');
       }
@@ -49,7 +82,6 @@ function Admin() {
       <h1>Add Project</h1>
       <form className="add-project" onSubmit={handleSubmit}>
         <input
-          className="project-title"
           type="text"
           placeholder="Project Title"
           value={title}
@@ -57,7 +89,6 @@ function Admin() {
           required
         />
         <textarea
-          className="project-description"
           placeholder="Project Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -65,25 +96,40 @@ function Admin() {
           required
         ></textarea>
         <input
-          className="project-file"
           type="file"
           onChange={(e) => setFile(e.target.files[0])}
           required
         />
         <input
-          className="project-link"
           type="url"
-          placeholder="Project Link (e.g., https://example.com)"
+          placeholder="Project Link (optional)"
           value={projectLink}
           onChange={(e) => setProjectLink(e.target.value)}
         />
         <input
-          className="repo-github"
           type="url"
-          placeholder="GitHub Repository Link"
+          placeholder="GitHub Repository (optional)"
           value={repoGitHub}
           onChange={(e) => setRepoGitHub(e.target.value)}
         />
+
+        {/* Checkboxes pour les stacks */}
+        <fieldset>
+          <legend>Select Stacks:</legend>
+          {stacks.map((stack) => (
+            <div key={stack.idStack} className="checkbox-stack">
+              <input
+                type="checkbox"
+                id={`stack-${stack.idStack}`}
+                value={stack.idStack}
+                checked={selectedStacks.includes(stack.idStack)}
+                onChange={() => handleStackChange(stack.idStack)}
+              />
+              <label htmlFor={`stack-${stack.idStack}`}>{stack.name}</label>
+            </div>
+          ))}
+        </fieldset>
+
         <button type="submit">Add Project</button>
       </form>
     </section>

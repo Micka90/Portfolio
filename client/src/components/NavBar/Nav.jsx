@@ -1,10 +1,13 @@
-import "./Nav.css";
-import { Link } from "react-router-dom";
-import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa6";
-import { TbFileCv } from "react-icons/tb";
-import pdf from "../../assets/CV-2024-DEV.pdf";
+import './Nav.css';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa6';
+import { TbFileCv } from 'react-icons/tb';
+import CVModal from '../Modal/CVModal';
 
 function Nav() {
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
   return (
     <nav>
       <ul className="navlist">
@@ -30,15 +33,19 @@ function Nav() {
           >
             <FaLinkedin className="iconenav" />
           </a>
-          <a
-            href={pdf}
-            download
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Download CV"
+
+          <button
+            onClick={() => setModalIsOpen(true)}
+            className="cv-button"
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+            }}
           >
-            <TbFileCv className="iconenav" title="Télécharger le CV" />
-          </a>
+            <TbFileCv className="iconenav" title="Voir le CV" />
+          </button>
           <a
             href="mailto:mickael.beaugrand@outlook.fr"
             target="_blank"
@@ -49,6 +56,8 @@ function Nav() {
           </a>
         </li>
       </ul>
+
+      <CVModal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)} />
     </nav>
   );
 }

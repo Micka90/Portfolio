@@ -15,21 +15,32 @@ const ProjectCards = () => {
       .catch((error) => console.error('Erreur API :', error));
   }, []);
 
-  const handlecardClick = (id) => {
+  const handleDetailsClick = (id) => {
     navigate(`/Project/${id}`);
+  };
+
+  const handleSiteClick = (link) => {
+    window.open(link, '_blank');
   };
 
   return (
     <div className="card-container">
       {projects.length > 0 ? (
         projects.map((project) => (
-          <div
-            key={project.idProject}
-            className="card"
-            onClick={() => handlecardClick(project.idProject)}
-          >
-            <img src={project.image} alt={project.name} />
+          <div key={project.idProject} className="card">
+            <div className="card-image-container">
+              <img src={project.image} alt={project.name} />
+            </div>
             <h3>{project.name}</h3>
+
+            <div className="card-content">
+              <button onClick={() => handleDetailsClick(project.idProject)}>
+                Détails
+              </button>
+              <button onClick={() => handleSiteClick(project.projectLink)}>
+                Visite moi
+              </button>
+            </div>
           </div>
         ))
       ) : (

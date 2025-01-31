@@ -1,22 +1,24 @@
 import './Nav.css';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa6';
+import { FaHome } from 'react-icons/fa';
 import { TbFileCv } from 'react-icons/tb';
+import { useLocation } from 'react-router-dom';
 import CVModal from '../Modal/CVModal';
 
 function Nav() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const location = useLocation(); 
 
   return (
-    <nav>
+    <nav className='navbar'>
       <ul className="navlist">
-        <li className="navproject">
-          <Link className="navproject" to="/Project">
-            Projet
-          </Link>
-        </li>
         <li className="navicone">
+          {location.pathname !== '/' && ( 
+            <a href="/" aria-label="Accueil">
+              <FaHome className="iconenav" title="Accueil" />
+            </a>
+          )}
           <a
             href="https://github.com/Micka90"
             target="_blank"
@@ -37,12 +39,7 @@ function Nav() {
           <button
             onClick={() => setModalIsOpen(true)}
             className="cv-button"
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 0,
-            }}
+            aria-label="Voir le CV"
           >
             <TbFileCv className="iconenav" title="Voir le CV" />
           </button>
@@ -63,3 +60,4 @@ function Nav() {
 }
 
 export default Nav;
+

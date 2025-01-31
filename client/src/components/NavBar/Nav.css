@@ -1,15 +1,19 @@
 /* Desktop */
+.navbar{
+  background-color: #fff;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.839);
+}
 
 .navlist {
   list-style: none;
   display: flex;
+  flex-direction: row-reverse;
   align-items: center;
   justify-content: space-between;
   font-size: 20px;
   font-weight: 600;
-  margin: 0;
-  padding: 0;
-  border: solid 1px red;
+  margin: 0px;
+  padding: 0px;
 }
 
 .navproject {
@@ -21,13 +25,25 @@
 
 .navicone {
   display: flex;
-  gap: 5%;
-  margin-right: 10px;
+  gap: 7%;
+  margin-right: 45px;
 }
 
 .iconenav {
   color: black;
   font-size: 30px;
+}
+
+.cv-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.cv-button .iconenav {
+  font-size: 30px;
+  color: black;
 }
 
 .custom-overlay {

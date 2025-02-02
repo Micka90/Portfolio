@@ -5,20 +5,24 @@ import { FaHome } from 'react-icons/fa';
 import { TbFileCv } from 'react-icons/tb';
 import { useLocation } from 'react-router-dom';
 import CVModal from '../Modal/CVModal';
+import Logo from '../../assets/Logo MB.png';
 
 function Nav() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const location = useLocation(); 
+  const location = useLocation();
 
   return (
-    <nav className='navbar'>
+    <nav className="navbar">
       <ul className="navlist">
-        <li className="navicone">
-          {location.pathname !== '/' && ( 
-            <a href="/" aria-label="Accueil">
+        <div className="logo-container">
+          <img src={Logo} className="logonav" alt="logo" />
+          {location.pathname !== '/' && (
+            <a href="/" aria-label="Accueil" className="home-button">
               <FaHome className="iconenav" title="Accueil" />
             </a>
           )}
+        </div>
+        <li className="navicone">
           <a
             href="https://github.com/Micka90"
             target="_blank"
@@ -60,4 +64,3 @@ function Nav() {
 }
 
 export default Nav;
-

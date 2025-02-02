@@ -1,6 +1,5 @@
 /*desktop*/
 
-/* Conteneur des cartes */
 .card-container {
   display: flex;
   align-items: center;
@@ -8,7 +7,6 @@
   gap: 10px;
 }
 
-/* Carte */
 .card {
   position: relative;
   overflow: hidden;
@@ -30,7 +28,6 @@
   transform: translateY(5px);
 }
 
-/* Conteneur de l’image */
 .card-image-container {
   width: 100%;
   height: 100px;
@@ -46,7 +43,6 @@
   object-fit: contain;
 }
 
-/* Titre */
 .card h3 {
   margin-top: 8px;
   font-size: 16px;
@@ -54,7 +50,6 @@
   text-align: center;
 }
 
-/* Contenu caché qui apparaît au survol */
 .card-content {
   position: absolute;
   bottom: -50px;
@@ -72,7 +67,6 @@
   bottom: 0;
 }
 
-/* Boutons */
 .card-content button {
   background: white;
   border: none;

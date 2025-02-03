@@ -12,26 +12,55 @@ class ProjectSeeder extends AbstractSeeder {
       {
         name: 'GEMS',
         description:
-          'Gems est une plateforme de revente de bijoux en ligne. Elle permet aux utilisateurs de vendre et d’acheter des bijoux d’occasion.',
+          'Ce projet avait pour objectif de créer une app full stack en respectant les bonnes pratiques de développement. Projet que j’ai présenté à mon passage de titre professionnel.',
         project_image: `${baseUrl}/uploads/GEMS.png`,
         userId: 1,
         repoGitHub: 'https://github.com/Micka90/P3-Gems',
         projectLink: 'https://gems-gems.fr/',
+        stacks: [
+          'HTML',
+          'CSS',
+          'JavaScript',
+          'React',
+          'Node.js',
+          'Express',
+          'MySQL',
+        ],
+      },
+
+      {
+        name: 'OUT',
+        description:
+          'Ce projet est un concept réalisée en 2 jours lors du Protojam 2024 avec le thème « Nature et déconnexion » - toutes les fonctionnalités sont présentées à titre d’exemples',
+        project_image: `${baseUrl}/uploads/out.png`,
+        userId: 1,
+        repoGitHub: 'https://github.com/Micka90/OUT',
+        projectLink: 'https://out-omega-dun.vercel.app/',
         stacks: ['HTML', 'CSS', 'JavaScript', 'React'],
       },
+
       {
         name: 'Film Fusion',
         description:
-          'Film Fusion est une plateforme dédiée au cinéma, permettant aux utilisateurs de découvrir, partager et discuter de films.',
+          'L’objectif était de construire un site web dynamique en utilisant les technologies suivantes : HTML, CSS, React, et en récupérant des données à partir d’une API.',
         project_image: `${baseUrl}/uploads/Film-fusion.png`,
         userId: 1,
         repoGitHub: 'https://github.com/Micka90/-P2-FilmFusion',
         projectLink: 'https://p2-film-fusion-client.vercel.app/',
-        stacks: ['HTML', 'CSS', 'Node.js', 'MySQL'],
+        stacks: ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js'],
+      },
+
+      {
+        name: 'Wild Social',
+        description:
+          'Premier projet réaliser lors de ma formation l’objectif était de crée un site statique  en  utilisant HTML , CSS et un peu de JavaScript',
+        project_image: `${baseUrl}/uploads/Wild-Social.png`,
+        userId: 1,
+        repoGitHub: 'https://github.com/Micka90/wild-social',
+        projectLink: 'https://hamsolovski.github.io/wild-social/',
+        stacks: ['HTML', 'CSS', 'JavaScript'],
       },
     ];
-
-    console.log('🌱 Seeding projects...');
 
     const [allStacks] = await this.database.query(
       `SELECT idStack, name FROM Stack`
@@ -57,7 +86,6 @@ class ProjectSeeder extends AbstractSeeder {
       );
 
       const projectId = result.insertId;
-      // console.log(`✅ Projet inséré : ${project.name} (ID: ${projectId})`);
 
       const selectedStacks = allStacks.filter((stack) =>
         project.stacks.includes(stack.name)
@@ -68,7 +96,6 @@ class ProjectSeeder extends AbstractSeeder {
           'INSERT INTO Project_Stack (idProject, idStack) VALUES (?, ?)',
           [projectId, stack.idStack]
         );
-        // console.log(`✅ Stack ${stack.name} (ID: ${stack.idStack}) associée à ${project.name}`);
       }
     }
 

@@ -1,12 +1,12 @@
 import './HomePage.css';
-import Avatar from '../../assets/avatar.png';
+// import Avatar from '../../assets/avatar.png';
 
 import ProjectCard from '../../components/ProjectCard/ProjectCard';
 
 function HomePage() {
   return (
-    <div id="homepage">
-      <img className="imagehome" src={Avatar} alt="User avatar" />
+    <div className="homepage">
+      {/* <img className="imagehome" src={Avatar} alt="User avatar" /> */}
       <section className=" containerhome">
         <h1>Mickael Beaugrand</h1>
         <h2>Développeur Junior</h2>

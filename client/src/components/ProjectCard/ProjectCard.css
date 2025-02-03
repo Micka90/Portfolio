@@ -2,6 +2,7 @@
 
 .card-container {
   display: flex;
+  flex-direction: row-reverse;
   align-items: center;
   justify-content: center;
   gap: 10px;
@@ -21,7 +22,7 @@
   justify-content: center;
   background: white;
   border-radius: 15px;
-  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.839);
 }
 
 .card:hover {

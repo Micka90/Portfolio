@@ -3,6 +3,7 @@
 .navbar {
   background-color: #fff;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.839);
+  border-radius: 25px;
 }
 
 .logo-container {
@@ -13,7 +14,8 @@
 
 .logonav {
   height: 35px;
-  border-radius: 0%;
+  border-radius: 25px;
+  margin-left: 15px;
 }
 
 .home-button {
@@ -26,8 +28,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 20px;
-  font-weight: 600;
   margin: 0px;
   padding: 0px;
 }

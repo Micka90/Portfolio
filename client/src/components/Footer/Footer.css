@@ -1,0 +1,13 @@
+/* Desktop */
+
+.footer {
+    width: 40%;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.839);
+  border-radius: 25px;
+  padding: 5px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

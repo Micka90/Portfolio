@@ -5,9 +5,14 @@
   flex-direction: row;
 }
 
-.imagehome {
-  object-fit: contain;
-  width: 30%;
+.homepage h1 {
+  font-size: 3em;
+  margin: 5px;
+}
+
+.homepage h2 {
+  font-size: 2em;
+  margin: 5px;
 }
 
 .containerhome {
@@ -20,4 +25,5 @@
 .homedescription {
   width: 80%;
   text-align: center;
+  margin-bottom: 50px;
 }

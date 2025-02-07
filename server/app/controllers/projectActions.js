@@ -136,15 +136,30 @@ const updateProject = async (req, res, next) => {
       return res.status(404).json({ error: 'Projet non trouvé' });
     }
 
-    await tables.database.query(
-      'DELETE FROM Project_Stack WHERE idProject = ?',
-      [id]
-    );
+    if (stackIds) {
+      const [existingStacks] = await tables.database.query(
+        'SELECT idStack FROM Project_Stack WHERE idProject = ?',
+        [id]
+      );
+      const existingStackIds = existingStacks.map((row) => row.idStack);
 
-    if (stackIds && stackIds.length > 0) {
-      for (const idStack of stackIds) {
+      const stacksToAdd = stackIds.filter(
+        (idStack) => !existingStackIds.includes(idStack)
+      );
+      const stacksToRemove = existingStackIds.filter(
+        (idStack) => !stackIds.includes(idStack)
+      );
+
+      for (const idStack of stacksToAdd) {
         await tables.database.query(
           'INSERT INTO Project_Stack (idProject, idStack) VALUES (?, ?)',
+          [id, idStack]
+        );
+      }
+
+      for (const idStack of stacksToRemove) {
+        await tables.database.query(
+          'DELETE FROM Project_Stack WHERE idProject = ? AND idStack = ?',
           [id, idStack]
         );
       }
@@ -154,6 +169,15 @@ const updateProject = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+module.exports = {
+  add,
+  getAll,
+  getOne,
+  addStacksToProject,
+  deleteProject,
+  updateProject,
 };
 
 module.exports = {

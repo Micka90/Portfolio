@@ -73,11 +73,25 @@ function ProjectModal({ isOpen, onClose }) {
     }
   };
 
-  const openUpdateModal = (project) => {
+  const openUpdateModal = async (project) => {
     setSelectedProject(project);
-    setSelectedStacks(
-      project.stacks ? project.stacks.map((stack) => stack.idStack) : []
-    );
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/project/${project.idProject}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setSelectedStacks(
+          data.stacks ? data.stacks.map((stack) => stack.idStack) : []
+        );
+      } else {
+        console.error('Erreur lors de la récupération des stacks du projet');
+      }
+    } catch (error) {
+      console.error('Erreur réseau:', error);
+    }
+
     setIsUpdateModalOpen(true);
   };
 
@@ -89,7 +103,7 @@ function ProjectModal({ isOpen, onClose }) {
       description: selectedProject.description,
       repoGitHub: selectedProject.repoGitHub,
       projectLink: selectedProject.projectLink,
-      stackIds: selectedStacks,
+      stackIds: selectedStacks.length > 0 ? selectedStacks : undefined,
     };
 
     try {
@@ -126,7 +140,9 @@ function ProjectModal({ isOpen, onClose }) {
         contentLabel="Liste des Projets"
       >
         <h2>Liste des projets</h2>
-        <button onClick={onClose}>Fermer</button>
+        <button className="close-btn" onClick={onClose}>
+          &times;
+        </button>
         <ul>
           {projects.map((project) => (
             <li key={project.idProject}>
@@ -188,7 +204,7 @@ function ProjectModal({ isOpen, onClose }) {
         />
 
         <fieldset>
-          <legend>Stacks</legend>
+          <legend>Stacks associées</legend>
           {stacks.map((stack) => (
             <div key={stack.idStack}>
               <input
@@ -214,6 +230,7 @@ function ProjectModal({ isOpen, onClose }) {
     </>
   );
 }
+
 ProjectModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,

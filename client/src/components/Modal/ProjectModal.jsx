@@ -1,0 +1,222 @@
+import Modal from 'react-modal';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+
+Modal.setAppElement('#root');
+
+function ProjectModal({ isOpen, onClose }) {
+  const [projects, setProjects] = useState([]);
+  const [stacks, setStacks] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedStacks, setSelectedStacks] = useState([]);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchProjects();
+      fetchStacks();
+    }
+  }, [isOpen]);
+
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/project`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setProjects(data);
+      } else {
+        console.error('Erreur lors de la récupération des projets');
+      }
+    } catch (error) {
+      console.error('Erreur réseau:', error);
+    }
+  };
+
+  const fetchStacks = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/stack`);
+      if (response.ok) {
+        const data = await response.json();
+        setStacks(data);
+      } else {
+        console.error('Erreur lors de la récupération des stacks');
+      }
+    } catch (error) {
+      console.error('Erreur réseau:', error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      'Êtes-vous sûr de vouloir supprimer ce projet ?'
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/project/${id}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      if (response.ok) {
+        alert('Projet supprimé avec succès');
+        fetchProjects();
+      } else {
+        alert('Échec de la suppression du projet');
+      }
+    } catch (error) {
+      console.error('Erreur de suppression:', error);
+    }
+  };
+
+  const openUpdateModal = (project) => {
+    setSelectedProject(project);
+    setSelectedStacks(
+      project.stacks ? project.stacks.map((stack) => stack.idStack) : []
+    );
+    setIsUpdateModalOpen(true);
+  };
+
+  const handleUpdate = async () => {
+    if (!selectedProject) return;
+
+    const updatedData = {
+      name: selectedProject.name,
+      description: selectedProject.description,
+      repoGitHub: selectedProject.repoGitHub,
+      projectLink: selectedProject.projectLink,
+      stackIds: selectedStacks,
+    };
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/project/${
+          selectedProject.idProject
+        }`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedData),
+        }
+      );
+
+      if (response.ok) {
+        alert('Projet mis à jour avec succès');
+        fetchProjects();
+        setIsUpdateModalOpen(false);
+      } else {
+        alert('Échec de la mise à jour');
+      }
+    } catch (error) {
+      console.error('Erreur de mise à jour:', error);
+    }
+  };
+
+  return (
+    <>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={onClose}
+        contentLabel="Liste des Projets"
+      >
+        <h2>Liste des projets</h2>
+        <button onClick={onClose}>Fermer</button>
+        <ul>
+          {projects.map((project) => (
+            <li key={project.idProject}>
+              {project.name}
+              <button onClick={() => openUpdateModal(project)}>
+                Mettre à jour
+              </button>
+              <button onClick={() => handleDelete(project.idProject)}>
+                Supprimer
+              </button>
+            </li>
+          ))}
+        </ul>
+      </Modal>
+
+      <Modal
+        isOpen={isUpdateModalOpen}
+        onRequestClose={() => setIsUpdateModalOpen(false)}
+        contentLabel="Mettre à jour le Projet"
+      >
+        <h2>Mettre à jour {selectedProject?.name}</h2>
+        <input
+          type="text"
+          value={selectedProject?.name || ''}
+          onChange={(e) =>
+            setSelectedProject({ ...selectedProject, name: e.target.value })
+          }
+        />
+        <textarea
+          value={selectedProject?.description || ''}
+          onChange={(e) =>
+            setSelectedProject({
+              ...selectedProject,
+              description: e.target.value,
+            })
+          }
+        />
+        <input
+          type="text"
+          placeholder="Repo GitHub"
+          value={selectedProject?.repoGitHub || ''}
+          onChange={(e) =>
+            setSelectedProject({
+              ...selectedProject,
+              repoGitHub: e.target.value,
+            })
+          }
+        />
+        <input
+          type="text"
+          placeholder="Lien Projet"
+          value={selectedProject?.projectLink || ''}
+          onChange={(e) =>
+            setSelectedProject({
+              ...selectedProject,
+              projectLink: e.target.value,
+            })
+          }
+        />
+
+        <fieldset>
+          <legend>Stacks</legend>
+          {stacks.map((stack) => (
+            <div key={stack.idStack}>
+              <input
+                type="checkbox"
+                value={stack.idStack}
+                checked={selectedStacks.includes(stack.idStack)}
+                onChange={() =>
+                  setSelectedStacks((prevSelected) =>
+                    prevSelected.includes(stack.idStack)
+                      ? prevSelected.filter((id) => id !== stack.idStack)
+                      : [...prevSelected, stack.idStack]
+                  )
+                }
+              />
+              <label>{stack.name}</label>
+            </div>
+          ))}
+        </fieldset>
+
+        <button onClick={handleUpdate}>Enregistrer</button>
+        <button onClick={() => setIsUpdateModalOpen(false)}>Annuler</button>
+      </Modal>
+    </>
+  );
+}
+ProjectModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
+
+export default ProjectModal;

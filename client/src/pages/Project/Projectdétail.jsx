@@ -18,37 +18,48 @@ const ProjectDetail = () => {
   }
 
   return (
-    <div className="project-detail">
+    <div className="project-detail-container">
       <h1>{project.name}</h1>
-      <img src={project.image} alt={project.name} className="ImageDetail" />
-      <p>{project.description}</p>
+      <img src={project.image} alt={project.name} className="Image-Detail" />
+      <p className="description">{project.description}</p>
 
-      <p>
-        <strong>Repo GitHub :</strong>
-        <a href={project.repoGitHub} target="_blank" rel="noopener noreferrer">
-          {project.repoGitHub}
-        </a>
-      </p>
+      <section className="links-stacks-container">
+        <p className="links">
+          <strong>Repo GitHub :</strong>
+          <a
+            href={project.repoGitHub}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {project.repoGitHub}
+          </a>
+          <strong>Projet en ligne :</strong>
+          <a
+            href={project.projectLink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {project.projectLink}
+          </a>
+        </p>
 
-      <p>
-        <strong>Projet en ligne :</strong>
-        <a href={project.projectLink} target="_blank" rel="noopener noreferrer">
-          {project.projectLink}
-        </a>
-      </p>
-
-      {project.stacks && project.stacks.length > 0 && (
-        <div className="stacks-container">
-          <h3>Stacks utilisées :</h3>
-          <div className="stacks-list">
-            {project.stacks.map((stack) => (
-              <div key={stack.idStack} className="stack-item">
-                <img src={stack.icon} alt={stack.name} className="stack-icon" />
-              </div>
-            ))}
+        {project.stacks && project.stacks.length > 0 && (
+          <div className="stacks-container">
+            <h3>Stacks utilisées :</h3>
+            <div className="stacks-list">
+              {project.stacks.map((stack) => (
+                <div key={stack.idStack}>
+                  <img
+                    src={stack.icon}
+                    alt={stack.name}
+                    className="stack-icon"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </section>
     </div>
   );
 };

@@ -1,13 +1,71 @@
 /*  desktop */
 
-.ImageDetail {
+.project-detail-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.project-detail-container h1 {
+  display: flex;
+  justify-content: center;
+  width: 24vh;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.839);
+  border-radius: 25px;
+}
+
+.Image-Detail {
   display: flex;
   align-items: center;
-  width: 50%;
+  width: 60vh;
   border-radius: 10px;
 }
 
-.stack-icon{
+.description {
+  width: 50vh;
+  padding: 10px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.839);
+  border-radius: 25px;
+}
+
+.links-stacks-container {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  gap: 60px;
+}
+
+.links {
+  width: 40vh;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.839);
+  border-radius: 25px;
+  margin-top: 20px;
+}
+
+.stacks-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.839);
+  border-radius: 25px;
+  width: auto;
+  padding: 10px;
+}
+
+.stacks-list {
+  display: flex;
+  flex-direction: row;
+}
+
+.stack-icon {
   width: 50px;
   height: 50px;
 }

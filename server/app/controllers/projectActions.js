@@ -2,9 +2,6 @@ const tables = require('../../database/tables');
 
 const add = async (req, res, next) => {
   try {
-    console.log('📌 Données reçues dans la requête :', req.body);
-    console.log('📌 Fichier reçu :', req.file);
-
     const projectData = {
       name: req.body.title,
       description: req.body.description,
@@ -16,8 +13,6 @@ const add = async (req, res, next) => {
       projectLink: req.body.project_link || 'Non spécifié',
     };
 
-    console.log('📌 Données du projet avant insertion :', projectData);
-
     const result = await tables.project.add(projectData);
 
     if (!result || !result.insertId) {
@@ -25,10 +20,9 @@ const add = async (req, res, next) => {
     }
 
     const projectId = result.insertId;
-    console.log(`✅ Projet inséré avec succès, ID: ${projectId}`);
 
     if (!tables.database) {
-      console.error('❌ ERREUR: tables.database est undefined !');
+      console.error(' ERREUR: tables.database est undefined !');
       throw new Error('tables.database is not defined.');
     }
 
@@ -36,21 +30,18 @@ const add = async (req, res, next) => {
       const stackIds = Array.isArray(req.body.stackIds)
         ? req.body.stackIds
         : [req.body.stackIds];
-      console.log('📌 Stacks reçues pour insertion :', stackIds);
 
       for (const idStack of stackIds) {
-        console.log(`📌 Ajout de la stack ${idStack} au projet ${projectId}`);
         await tables.database.query(
           'INSERT INTO Project_Stack (idProject, idStack) VALUES (?, ?)',
           [projectId, idStack]
         );
-        console.log(`✅ Stack ${idStack} associée au projet ${projectId}`);
       }
     }
 
     res.status(201).json({ message: 'Project added successfully!', projectId });
   } catch (err) {
-    console.error('❌ Erreur lors de l’ajout du projet:', err);
+    console.error(' Erreur lors de l’ajout du projet:', err);
     next(err);
   }
 };
@@ -136,30 +127,15 @@ const updateProject = async (req, res, next) => {
       return res.status(404).json({ error: 'Projet non trouvé' });
     }
 
-    if (stackIds) {
-      const [existingStacks] = await tables.database.query(
-        'SELECT idStack FROM Project_Stack WHERE idProject = ?',
-        [id]
-      );
-      const existingStackIds = existingStacks.map((row) => row.idStack);
+    await tables.database.query(
+      'DELETE FROM Project_Stack WHERE idProject = ?',
+      [id]
+    );
 
-      const stacksToAdd = stackIds.filter(
-        (idStack) => !existingStackIds.includes(idStack)
-      );
-      const stacksToRemove = existingStackIds.filter(
-        (idStack) => !stackIds.includes(idStack)
-      );
-
-      for (const idStack of stacksToAdd) {
+    if (stackIds && stackIds.length > 0) {
+      for (const idStack of stackIds) {
         await tables.database.query(
           'INSERT INTO Project_Stack (idProject, idStack) VALUES (?, ?)',
-          [id, idStack]
-        );
-      }
-
-      for (const idStack of stacksToRemove) {
-        await tables.database.query(
-          'DELETE FROM Project_Stack WHERE idProject = ? AND idStack = ?',
           [id, idStack]
         );
       }
@@ -169,15 +145,6 @@ const updateProject = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-};
-
-module.exports = {
-  add,
-  getAll,
-  getOne,
-  addStacksToProject,
-  deleteProject,
-  updateProject,
 };
 
 module.exports = {

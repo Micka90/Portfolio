@@ -1,6 +1,7 @@
 import Modal from 'react-modal';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useAuth } from '../../contexts/AuthContext';
 
 Modal.setAppElement('#root');
 
@@ -12,6 +13,7 @@ function AddProjectModal({ isOpen, onClose }) {
   const [repoGitHub, setRepoGitHub] = useState('');
   const [stacks, setStacks] = useState([]);
   const [selectedStacks, setSelectedStacks] = useState([]);
+  const { auth } = useAuth();
 
   useEffect(() => {
     if (isOpen) {
@@ -26,23 +28,21 @@ function AddProjectModal({ isOpen, onClose }) {
         const data = await response.json();
         setStacks(data);
       } else {
-        console.error('Erreur lors de la récupération des stacks');
+        console.error(' Erreur lors de la récupération des stacks');
       }
     } catch (error) {
-      console.error('Erreur réseau:', error);
+      console.error(' Erreur réseau:', error);
     }
-  };
-
-  const handleStackChange = (idStack) => {
-    setSelectedStacks((prevSelected) =>
-      prevSelected.includes(idStack)
-        ? prevSelected.filter((id) => id !== idStack)
-        : [...prevSelected, idStack]
-    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!auth?.token) {
+      console.warn(" Token manquant, impossible d'ajouter un projet !");
+      alert('Votre session a expiré, veuillez vous reconnecter.');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('title', title);
@@ -60,25 +60,24 @@ function AddProjectModal({ isOpen, onClose }) {
         `${import.meta.env.VITE_API_URL}/api/project`,
         {
           method: 'POST',
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
           body: formData,
         }
       );
 
+      console.log('🔍 Requête ajout projet envoyée :', response);
+
       if (response.ok) {
-        alert('Projet ajouté avec succès !');
-        setTitle('');
-        setDescription('');
-        setFile(null);
-        setProjectLink('');
-        setRepoGitHub('');
-        setSelectedStacks([]);
-        onClose(); 
+        alert('✅ Projet ajouté avec succès !');
+        onClose();
       } else {
-        alert("Échec de l'ajout du projet.");
+        alert("❌ Échec de l'ajout du projet.");
       }
     } catch (error) {
-      console.error('Erreur:', error);
-      alert('Une erreur est survenue.');
+      console.error('❌ Erreur:', error);
+      alert('❌ Une erreur est survenue.');
     }
   };
 
@@ -131,7 +130,13 @@ function AddProjectModal({ isOpen, onClose }) {
                 id={`stack-${stack.idStack}`}
                 value={stack.idStack}
                 checked={selectedStacks.includes(stack.idStack)}
-                onChange={() => handleStackChange(stack.idStack)}
+                onChange={() =>
+                  setSelectedStacks((prev) =>
+                    prev.includes(stack.idStack)
+                      ? prev.filter((id) => id !== stack.idStack)
+                      : [...prev, stack.idStack]
+                  )
+                }
               />
               <label htmlFor={`stack-${stack.idStack}`}>{stack.name}</label>
             </div>
@@ -146,6 +151,7 @@ function AddProjectModal({ isOpen, onClose }) {
     </Modal>
   );
 }
+
 AddProjectModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,

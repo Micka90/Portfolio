@@ -1,14 +1,10 @@
 require('dotenv').config();
-
-const fs = require('node:fs');
-const path = require('node:path');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+const fs = require('fs');
+const path = require('path');
+const mysql = require('mysql2/promise');
 
 const schemaPath = path.join(__dirname, '../../database/schema.sql');
-
 const schema = fs.readFileSync(schemaPath, 'utf8');
-
-const mysql = require('mysql2/promise');
 
 const migrate = async () => {
   try {
@@ -20,25 +16,22 @@ const migrate = async () => {
       multipleStatements: true,
     });
 
-    await database.query(`DROP DATABASE IF EXISTS ${process.env.DB_NAME};`);
+    if (process.env.NODE_ENV !== 'production') {
+      await database.query(`DROP DATABASE IF EXISTS ${process.env.DB_NAME};`);
+    } else {
+    }
 
-    await database.query(`CREATE DATABASE ${process.env.DB_NAME};`);
-
+    await database.query(
+      `CREATE DATABASE IF NOT EXISTS ${process.env.DB_NAME};`
+    );
     await database.query(`USE ${process.env.DB_NAME};`);
-
     await database.query(schema);
 
-    database.end();
-
     console.info(
-      `✅ La base de données ${process.env.DB_NAME} a été mise à jour avec succès à partir de '${schemaPath}'.`
+      `✅ La base de données ${process.env.DB_NAME} a été migrée avec succès.`
     );
   } catch (err) {
-    console.error(
-      '❌ Erreur lors de la mise à jour de la base de données :',
-      err.message
-    );
-    console.error(err.stack);
+    console.error('❌ Erreur de migration :', err.message);
   }
 };
 

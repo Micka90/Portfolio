@@ -1,10 +1,12 @@
 const cors = require("cors");
 
+const allowedOrigins = [process.env.CLIENT_URL];
+if (process.env.NODE_ENV !== 'production') {
+    allowedOrigins.push("http://localhost:3000");
+}
+
 const corsOptions = {
-    origin: [
-        process.env.CLIENT_URL, 
-        "http://another-domain.com",
-    ],
+    origin: allowedOrigins,
     credentials: true, 
     optionsSuccessStatus: 200,
     exposedHeaders: ["Authorization"],
@@ -12,3 +14,4 @@ const corsOptions = {
 };
 
 module.exports = cors(corsOptions);
+

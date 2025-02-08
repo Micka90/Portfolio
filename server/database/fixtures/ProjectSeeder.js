@@ -67,7 +67,6 @@ class ProjectSeeder extends AbstractSeeder {
     );
 
     if (allStacks.length === 0) {
-      console.log('⚠️ Aucune stack disponible en base de données !');
       return;
     }
 

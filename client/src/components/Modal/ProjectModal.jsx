@@ -1,6 +1,7 @@
 import Modal from 'react-modal';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useAuth } from '../../contexts/AuthContext';
 
 Modal.setAppElement('#root');
 
@@ -10,6 +11,7 @@ function ProjectModal({ isOpen, onClose }) {
   const [selectedProject, setSelectedProject] = useState(null);
   const [selectedStacks, setSelectedStacks] = useState([]);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const { auth } = useAuth();
 
   useEffect(() => {
     if (isOpen) {
@@ -19,18 +21,31 @@ function ProjectModal({ isOpen, onClose }) {
   }, [isOpen]);
 
   const fetchProjects = async () => {
+    if (!auth?.token) {
+      console.warn('❌ Token manquant, impossible de récupérer les projets !');
+      alert('Votre session a expiré, veuillez vous reconnecter.');
+      return;
+    }
+
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/project`
+        `${import.meta.env.VITE_API_URL}/api/project`,
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+          credentials: 'include',
+        }
       );
+
       if (response.ok) {
         const data = await response.json();
         setProjects(data);
       } else {
-        console.error('Erreur lors de la récupération des projets');
+        console.error(' Erreur lors de la récupération des projets');
       }
     } catch (error) {
-      console.error('Erreur réseau:', error);
+      console.error(' Erreur réseau:', error);
     }
   };
 
@@ -41,14 +56,20 @@ function ProjectModal({ isOpen, onClose }) {
         const data = await response.json();
         setStacks(data);
       } else {
-        console.error('Erreur lors de la récupération des stacks');
+        console.error(' Erreur lors de la récupération des stacks');
       }
     } catch (error) {
-      console.error('Erreur réseau:', error);
+      console.error(' Erreur réseau:', error);
     }
   };
 
   const handleDelete = async (id) => {
+    if (!auth?.token) {
+      console.warn(' Token manquant, suppression impossible !');
+      alert('Votre session a expiré, veuillez vous reconnecter.');
+      return;
+    }
+
     const confirmDelete = window.confirm(
       'Êtes-vous sûr de vouloir supprimer ce projet ?'
     );
@@ -59,44 +80,65 @@ function ProjectModal({ isOpen, onClose }) {
         `${import.meta.env.VITE_API_URL}/api/project/${id}`,
         {
           method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
         }
       );
 
+      console.log('🔍 Requête suppression projet envoyée :', response);
+
       if (response.ok) {
-        alert('Projet supprimé avec succès');
+        alert('✅ Projet supprimé avec succès');
         fetchProjects();
       } else {
-        alert('Échec de la suppression du projet');
+        alert('❌ Échec de la suppression du projet');
       }
     } catch (error) {
-      console.error('Erreur de suppression:', error);
+      console.error('❌ Erreur de suppression:', error);
     }
   };
 
   const openUpdateModal = async (project) => {
+    if (!auth?.token) {
+      console.warn('❌ Token manquant, mise à jour impossible !');
+      return;
+    }
+
     setSelectedProject(project);
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/project/${project.idProject}`
+        `${import.meta.env.VITE_API_URL}/api/project/${project.idProject}`,
+        {
+          headers: {
+            Authorization: `Bearer ${auth.token}`,
+          },
+        }
       );
+
       if (response.ok) {
         const data = await response.json();
         setSelectedStacks(
           data.stacks ? data.stacks.map((stack) => stack.idStack) : []
         );
       } else {
-        console.error('Erreur lors de la récupération des stacks du projet');
+        console.error('❌ Erreur lors de la récupération des stacks du projet');
       }
     } catch (error) {
-      console.error('Erreur réseau:', error);
+      console.error('❌ Erreur réseau:', error);
     }
 
     setIsUpdateModalOpen(true);
   };
 
   const handleUpdate = async () => {
-    if (!selectedProject) return;
+    if (!selectedProject || !auth?.token) {
+      console.warn(
+        '❌ Token manquant ou projet non sélectionné, mise à jour impossible !'
+      );
+      return;
+    }
 
     const updatedData = {
       name: selectedProject.name,
@@ -115,20 +157,23 @@ function ProjectModal({ isOpen, onClose }) {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${auth.token}`,
           },
           body: JSON.stringify(updatedData),
         }
       );
 
+      console.log('🔍 Requête mise à jour projet envoyée :', response);
+
       if (response.ok) {
-        alert('Projet mis à jour avec succès');
+        alert('✅ Projet mis à jour avec succès');
         fetchProjects();
         setIsUpdateModalOpen(false);
       } else {
-        alert('Échec de la mise à jour');
+        alert('❌ Échec de la mise à jour');
       }
     } catch (error) {
-      console.error('Erreur de mise à jour:', error);
+      console.error('❌ Erreur de mise à jour:', error);
     }
   };
 

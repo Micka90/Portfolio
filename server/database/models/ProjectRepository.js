@@ -4,14 +4,26 @@ class ProjectRepository {
   }
 
   async add(project) {
-    const { name, description, project_image, userId, repoGitHub, projectLink } = project;
+    const {
+      name,
+      description,
+      project_image,
+      userId,
+      repoGitHub,
+      projectLink,
+    } = project;
     const [result] = await this.database.query(
       `INSERT INTO Project (name, description, image, user_iduser, repoGitHub, projectLink) 
        VALUES (?, ?, ?, ?, ?, ?)`,
-      [name, description, project_image, userId, repoGitHub || 'Non spécifié', projectLink || 'Non spécifié']
+      [
+        name,
+        description,
+        project_image,
+        userId,
+        repoGitHub || 'Non spécifié',
+        projectLink || 'Non spécifié',
+      ]
     );
-
-    console.log('Database Result:', result);
 
     if (!result.insertId) {
       throw new Error('L’ID du projet inséré est invalide.');
@@ -21,7 +33,10 @@ class ProjectRepository {
   }
 
   async getOne(id) {
-    const [result] = await this.database.query('SELECT * FROM Project WHERE idProject = ?', [id]);
+    const [result] = await this.database.query(
+      'SELECT * FROM Project WHERE idProject = ?',
+      [id]
+    );
     return result[0];
   }
 
@@ -32,4 +47,3 @@ class ProjectRepository {
 }
 
 module.exports = ProjectRepository;
-

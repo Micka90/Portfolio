@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import './Login.css';
 
@@ -6,25 +6,16 @@ function Login() {
   const mailRef = useRef();
   const passwordRef = useRef();
   const { setAuth } = useAuth();
-  const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    if (!mailRef.current.value || !passwordRef.current.value) {
-      setError('Veuillez remplir tous les champs');
-      return;
-    }
 
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/user/login`,
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: mailRef.current.value,
             password: passwordRef.current.value,
@@ -33,20 +24,25 @@ function Login() {
         }
       );
 
-      if (response.status === 200) {
-        const token = response.headers.get('Authorization');
+      if (response.ok) {
+        const token = response.headers.get('Authorization')?.split(' ')[1];
         const user = await response.json();
-        setAuth({ user, token });
-        setError(false);
-        setSuccess(true);
+
+        if (user && user.id && token) {
+          setAuth({ ...user, token });
+        } else {
+          console.warn(
+            ' Utilisateur ou token invalide après login :',
+            user,
+            token
+          );
+          setAuth(null);
+        }
       } else {
-        setError('Email ou mot de passe incorrect');
-        setSuccess(false);
+        console.error(' Erreur de connexion :', await response.json());
       }
     } catch (err) {
-      setError('Une erreur est survenue, veuillez réessayer');
-      setSuccess(false);
-      console.error(err);
+      console.error(' Erreur lors du login :', err);
     }
   };
 
@@ -66,8 +62,6 @@ function Login() {
           placeholder="Mot de passe"
         />
         <button type="submit">Login</button>
-        {success && <p className="success-message">Connexion réussie !</p>}
-        {error && <p className="error-message">{error}</p>}
       </form>
     </section>
   );

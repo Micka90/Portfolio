@@ -12,8 +12,6 @@ tables.stack = new StackRepository(database);
 
 tables.database = database;
 
-// console.log('✅ tables.database enregistré avec succès.');
-
 module.exports = new Proxy(tables, {
   get(obj, prop) {
     if (prop in obj) return obj[prop];

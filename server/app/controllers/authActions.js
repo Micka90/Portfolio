@@ -6,44 +6,31 @@ const tables = require('../../database/tables');
 const login = async (req, res, next) => {
   try {
     const user = await tables.user.readByEmailWithPassword(req.body.email);
-
-    if (user == null) {
-      res.sendStatus(422);
-      return;
+    if (!user) {
+      return res.status(422).json({ message: 'Utilisateur non trouvé.' });
     }
 
     const verified = await argon2.verify(user.password, req.body.password);
-    if (verified) {
-      delete user.password;
-
-      const accessToken = jwt.sign(
-        { id: user.iduser, isAdmin: user.is_admin },
-        process.env.APP_SECRET,
-        { expiresIn: '1h' }
-      );
-
-      const refreshToken = jwt.sign(
-        { id: user.iduser, isAdmin: user.is_admin },
-        process.env.APP_SECRET,
-        { expiresIn: '1d' }
-      );
-
-      res.cookie('refreshToken', refreshToken, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      });
-
-      res
-        .status(200)
-        .header('Authorization', `Bearer ${accessToken}`)
-        .json(user);
-    } else {
-      res.sendStatus(422);
+    if (!verified) {
+      return res.status(422).json({ message: 'Mot de passe incorrect.' });
     }
+
+    delete user.password;
+
+    const accessToken = jwt.sign(
+      { id: user.iduser, isAdmin: user.is_admin },
+      process.env.APP_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.status(200).json({
+      id: user.iduser,
+      name: user.name,
+      email: user.email,
+      is_admin: user.is_admin,
+      accessToken,
+    });
   } catch (err) {
-    console.error('Erreur dans la fonction login :', err);
     next(err);
   }
 };
@@ -51,8 +38,11 @@ const login = async (req, res, next) => {
 const refresh = async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies;
+
+    console.log('🔍 Refresh token reçu :', refreshToken);
+
     if (!refreshToken) {
-      console.error('Refresh token missing in cookies');
+      console.error(' Refresh token absent dans les cookies');
       return res.status(401).send('No refresh token provided.');
     }
 
@@ -60,15 +50,13 @@ const refresh = async (req, res, next) => {
     try {
       decoded = jwt.verify(refreshToken, process.env.APP_SECRET);
     } catch (err) {
-      console.error('Failed to verify refresh token:', err.message);
+      console.error(' Erreur de vérification du refresh token:', err.message);
       return res.status(401).send('Invalid refresh token.');
     }
 
-    // console.log("Refresh token decoded:", decoded);
-
     const user = await tables.user.read(decoded.id);
     if (!user) {
-      console.error('User not found with ID:', decoded.id);
+      console.error(' Utilisateur introuvable avec ID:', decoded.id);
       return res.status(404).send('User not found.');
     }
 
@@ -78,10 +66,16 @@ const refresh = async (req, res, next) => {
       { expiresIn: '1h' }
     );
 
-    // console.log("Access token successfully refreshed for user ID:", user.iduser);
-    return res.header('Authorization', `Bearer ${accessToken}`).json(user);
+    res.setHeader('Authorization', `Bearer ${accessToken}`);
+
+    res.status(200).json({
+      id: user.iduser,
+      name: user.name,
+      email: user.email,
+      is_admin: user.is_admin,
+    });
   } catch (error) {
-    console.error('Unexpected error in refresh:', error.message);
+    console.error(' Erreur inattendue dans refresh:', error.message);
     return res.status(500).send('Internal server error.');
   }
 };

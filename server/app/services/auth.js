@@ -1,19 +1,9 @@
 const argon2 = require('argon2');
-
 const jwt = require('jsonwebtoken');
-
-const hashingOptions = {
-  type: argon2.argon2id,
-  memoryCost: 19 * 2 ** 10,
-  timeCost: 2,
-  parallelism: 1,
-};
 
 const hashPassword = async (req, res, next) => {
   try {
-    const { password } = req.body;
-    const hashedPassword = await argon2.hash(password, hashingOptions);
-    req.body.hashedPassword = hashedPassword;
+    req.body.hashedPassword = await argon2.hash(req.body.password);
     delete req.body.password;
     next();
   } catch (err) {
@@ -24,22 +14,26 @@ const hashPassword = async (req, res, next) => {
 const verifyToken = (req, res, next) => {
   try {
     const authorizationHeader = req.get('Authorization');
-    if (authorizationHeader == null) {
-      throw new Error('Authorization header is missing');
+    if (!authorizationHeader) {
+      return res.status(401).json({ message: 'Token manquant' });
     }
+
     const [type, token] = authorizationHeader.split(' ');
-    if (type !== 'Bearer') {
-      throw new Error("Authorization header has not the 'Bearer' type");
+    if (type !== 'Bearer' || !token) {
+      return res.status(401).json({ message: 'Format du token invalide' });
     }
-    req.auth = jwt.verify(token, process.env.APP_SECRET);
-    next();
+
+    try {
+      req.auth = jwt.verify(token, process.env.APP_SECRET);
+      next();
+    } catch (error) {
+      return res.status(403).json({ message: 'Token invalide ou expiré' });
+    }
   } catch (err) {
-    console.error(err);
-    res.sendStatus(401);
+    res
+      .status(500)
+      .json({ message: 'Erreur serveur lors de la vérification du token' });
   }
 };
 
-module.exports = {
-  hashPassword,
-  verifyToken,
-};
+module.exports = { hashPassword, verifyToken };

@@ -11,12 +11,8 @@ const browse = async (req, res, next) => {
 
 const add = async (req, res, next) => {
   try {
-    const existingUser = await tables.user.readByEmail(req.body.email);
-    if (existingUser) {
-      return res.status(409).json({ message: "User already exists" });
-    }
-
-    const result = await tables.user.add(req.body);
+    const createUser = req.body;
+    const result = await tables.user.add(createUser);
     res.status(201).json(result);
   } catch (err) {
     next(err);

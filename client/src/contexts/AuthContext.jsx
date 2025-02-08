@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const getAuth = async () => {
       try {
-        if (auth?.token) return; 
+        if (auth?.token) return;
 
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/api/user/refresh`,
@@ -21,14 +21,16 @@ export function AuthProvider({ children }) {
 
         if (response.ok) {
           const user = await response.json();
-          const token = response.headers.get('Authorization')?.split(' ')[1]; 
-
-          
+          const token = response.headers.get('Authorization')?.split(' ')[1];
 
           if (user && user.id && token) {
             setAuth({ ...user, token });
           } else {
-            console.warn(' Utilisateur ou token invalide après refresh :', user, token);
+            console.warn(
+              ' Utilisateur ou token invalide après refresh :',
+              user,
+              token
+            );
             setAuth(null);
           }
         } else {

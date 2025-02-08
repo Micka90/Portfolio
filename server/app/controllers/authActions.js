@@ -1,6 +1,5 @@
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
-
 const tables = require('../../database/tables');
 
 const login = async (req, res, next) => {
@@ -23,6 +22,16 @@ const login = async (req, res, next) => {
       { expiresIn: '1h' }
     );
 
+    const refreshToken = jwt.sign({ id: user.iduser }, process.env.APP_SECRET, {
+      expiresIn: '7d',
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+
     res.status(200).json({
       id: user.iduser,
       name: user.name,
@@ -38,8 +47,6 @@ const login = async (req, res, next) => {
 const refresh = async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies;
-
-    console.log('🔍 Refresh token reçu :', refreshToken);
 
     if (!refreshToken) {
       console.error(' Refresh token absent dans les cookies');
@@ -66,6 +73,13 @@ const refresh = async (req, res, next) => {
       { expiresIn: '1h' }
     );
 
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
     res.setHeader('Authorization', `Bearer ${accessToken}`);
 
     res.status(200).json({
@@ -75,7 +89,7 @@ const refresh = async (req, res, next) => {
       is_admin: user.is_admin,
     });
   } catch (error) {
-    console.error(' Erreur inattendue dans refresh:', error.message);
+    console.error('Erreur inattendue dans refresh:', error.message);
     return res.status(500).send('Internal server error.');
   }
 };

@@ -30,9 +30,7 @@ const verifyToken = (req, res, next) => {
       return res.status(403).json({ message: 'Token invalide ou expiré' });
     }
   } catch (err) {
-    res
-      .status(500)
-      .json({ message: 'Erreur serveur lors de la vérification du token' });
+    res.status(500).json({ message: 'Erreur serveur lors de la vérification du token' });
   }
 };
 

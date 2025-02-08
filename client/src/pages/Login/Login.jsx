@@ -20,7 +20,7 @@ function Login() {
             email: mailRef.current.value,
             password: passwordRef.current.value,
           }),
-          credentials: 'include',
+          credentials: 'include', 
         }
       );
 
@@ -31,18 +31,14 @@ function Login() {
         if (user && user.id && token) {
           setAuth({ ...user, token });
         } else {
-          console.warn(
-            ' Utilisateur ou token invalide après login :',
-            user,
-            token
-          );
+          console.warn('Utilisateur ou token invalide après login :', user, token);
           setAuth(null);
         }
       } else {
-        console.error(' Erreur de connexion :', await response.json());
+        console.error('Erreur de connexion :', await response.json());
       }
     } catch (err) {
-      console.error(' Erreur lors du login :', err);
+      console.error('Erreur lors du login :', err);
     }
   };
 

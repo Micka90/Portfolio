@@ -49,8 +49,7 @@ const refresh = async (req, res, next) => {
     const { refreshToken } = req.cookies;
 
     if (!refreshToken) {
-      console.error(' Refresh token absent dans les cookies');
-      return res.status(401).send('No refresh token provided.');
+      return res.status(204).send();
     }
 
     let decoded;

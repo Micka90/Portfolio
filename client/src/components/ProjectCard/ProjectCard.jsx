@@ -4,6 +4,7 @@ import './ProjectCard.css';
 
 const ProjectCards = () => {
   const [projects, setProjects] = useState([]);
+  const [activeCard, setActiveCard] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,6 +15,11 @@ const ProjectCards = () => {
       })
       .catch((error) => console.error('Erreur API :', error));
   }, []);
+
+  const handleCardClick = (id) => {
+    if (window.innerWidth > 600) return;
+    setActiveCard(activeCard === id ? null : id);
+  };
 
   const handleDetailsClick = (id) => {
     navigate(`/Project/${id}`);
@@ -27,17 +33,33 @@ const ProjectCards = () => {
     <div className="card-container">
       {projects.length > 0 ? (
         projects.map((project) => (
-          <div key={project.idProject} className="card">
+          <div
+            key={project.idProject}
+            className={`card ${
+              activeCard === project.idProject ? 'active' : ''
+            }`}
+            onClick={() => handleCardClick(project.idProject)}
+          >
             <div className="card-image-container">
               <img src={project.image} alt={project.name} />
             </div>
             <h3>{project.name}</h3>
 
             <div className="card-content">
-              <button onClick={() => handleDetailsClick(project.idProject)}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDetailsClick(project.idProject);
+                }}
+              >
                 Détails
               </button>
-              <button onClick={() => handleSiteClick(project.projectLink)}>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleSiteClick(project.projectLink);
+                }}
+              >
                 Visite moi
               </button>
             </div>

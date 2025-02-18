@@ -1,11 +1,18 @@
 /* Desktop */
 
 .navbar {
+  position: fixed;
+  top: 5px; 
+  left: 10px; 
+  width: calc(100% - 20px); 
   background-color: #fff;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.839);
   border-radius: 25px;
-  margin-top: 10px;
+  z-index: 1000;
 }
+
+
+
 
 .logo-container {
   display: flex;

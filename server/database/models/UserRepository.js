@@ -16,7 +16,6 @@ class UserRepository {
       `SELECT * FROM user WHERE email = ?`,
       [email]
     );
-    console.log('Résultat de la requête SQL :', rows);
     return rows[0];
   }
 

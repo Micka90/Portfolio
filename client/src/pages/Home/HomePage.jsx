@@ -5,22 +5,20 @@ function HomePage() {
   return (
     <div className="homepage">
       <section className=" containerhome">
-        <h1>Mickael Beaugrand</h1>
+        <h1>Mickaël Beaugrand</h1>
         <h2>Développeur Junior</h2>
         <p className="homedescription ">
-          Lorem ipsum dolor sit amet. Et assumenda eligendi eos placeat dolor
-          est harum necessitatibus? Id laboriosam velit cum officia recusandae
-          sed corrupti nostrum ut voluptas similique. Et perspiciatis placeat
-          qui voluptas alias ut mollitia fuga est magni galisum est laborum
-          corporis ad voluptatem perspiciatis. Rem quidem officia 33 unde
-          consequatur id corporis quisquam non nostrum placeat? Eum quibusdam
-          optio sit illo dolores hic dolor nemo in sunt dignissimos quo esse
-          omnis et nostrum autem. Et error molestiae et earum veniam aut eius
-          asperiores. Sit voluptate nihil quo galisum necessitatibus rem iure
-          molestias ut delectus reprehenderit et praesentium minus? Qui tempore
-          praesentium et obcaecati suscipit ad enim fugiat et magni voluptatibus
-          est deserunt aperiam. Et distinctio blanditiis non aperiam illum a
-          fugiat expedita qui consequuntur autem vel temporibus ullam.
+          Passionné par la tech et son écosystème, j’ai fait le choix d’une
+          reconversion professionnelle pour devenir développeur web. J’aime
+          explorer autant le frontend que le backend, et je suis en
+          apprentissage constant pour affiner mes compétences et relever de
+          nouveaux défis. Fort d’une expérience en tant qu’ancien chef d’équipe,
+          j’accorde une grande importance à la communication, au partage de
+          connaissances et à la collaboration. Travailler ensemble, apprendre
+          des autres et faire évoluer un projet en équipe sont des aspects qui
+          me tiennent à cœur. Aujourd’hui, je suis à la recherche d’une
+          alternance ou d’un poste de développeur web junior, prêt à apprendre,
+          contribuer et évoluer dans un environnement stimulant.
         </p>
         <ProjectCard />
       </section>

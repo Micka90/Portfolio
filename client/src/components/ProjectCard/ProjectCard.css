@@ -82,3 +82,28 @@
 .card-content button:hover {
   background: #f0f0f0;
 }
+
+.card.active {
+  transform: scale(1.05);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/*Mobile*/
+
+@media (max-width: 600px) {
+  .card-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card-content {
+    bottom: -50px;
+    transition: bottom 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0;
+  }
+
+  .card.active .card-content {
+    bottom: 0;
+    opacity: 1;
+  }
+}

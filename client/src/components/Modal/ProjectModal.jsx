@@ -2,6 +2,8 @@ import Modal from 'react-modal';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useAuth } from '../../contexts/AuthContext';
+import './Modal.css';
+import './ProjectModal.css';
 
 Modal.setAppElement('#root');
 
@@ -179,29 +181,32 @@ function ProjectModal({ isOpen, onClose }) {
 
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={onClose}
-        contentLabel="Liste des Projets"
-      >
-        <h2>Liste des projets</h2>
-        <button className="close-btn" onClick={onClose}>
-          &times;
-        </button>
-        <ul>
-          {projects.map((project) => (
-            <li key={project.idProject}>
-              {project.name}
-              <button onClick={() => openUpdateModal(project)}>
-                Mettre à jour
-              </button>
-              <button onClick={() => handleDelete(project.idProject)}>
-                Supprimer
-              </button>
-            </li>
-          ))}
-        </ul>
-      </Modal>
+   <Modal
+  isOpen={isOpen}
+  onRequestClose={onClose}
+  contentLabel="Liste des Projets"
+  className="project-modal"
+>
+  <h2>Liste des projets</h2>
+  <button className="close-btn" onClick={onClose}>&times;</button>
+  <ul className="project-list">
+    {projects.map((project) => (
+      <li key={project.idProject} className="project-item">
+        <span className="project-name">{project.name}</span>
+        <div className="project-buttons">
+          <button className="update-btn" onClick={() => openUpdateModal(project)}>
+            Modifier
+          </button>
+          <button className="delete-btn" onClick={() => handleDelete(project.idProject)}>
+            Supprimer
+          </button>
+        </div>
+      </li>
+    ))}
+  </ul>
+</Modal>
+
+
 
       <Modal
         isOpen={isUpdateModalOpen}

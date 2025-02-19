@@ -2,6 +2,8 @@ import Modal from 'react-modal';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useAuth } from '../../contexts/AuthContext';
+import './Modal.css';
+import './AddProjectModal.css';
 
 Modal.setAppElement('#root');
 
@@ -67,8 +69,6 @@ function AddProjectModal({ isOpen, onClose }) {
         }
       );
 
-      console.log('🔍 Requête ajout projet envoyée :', response);
-
       if (response.ok) {
         alert('✅ Projet ajouté avec succès !');
         onClose();
@@ -86,7 +86,12 @@ function AddProjectModal({ isOpen, onClose }) {
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel="Ajouter un Projet"
+      className="add-project-modal"
     >
+      <button className="close-btn" onClick={onClose}>
+        &times;
+      </button>
+
       <h2>Ajouter un Projet</h2>
       <form className="add-project" onSubmit={handleSubmit}>
         <input
@@ -123,30 +128,36 @@ function AddProjectModal({ isOpen, onClose }) {
 
         <fieldset>
           <legend>Sélectionner les Stacks :</legend>
-          {stacks.map((stack) => (
-            <div key={stack.idStack} className="checkbox-stack">
-              <input
-                type="checkbox"
-                id={`stack-${stack.idStack}`}
-                value={stack.idStack}
-                checked={selectedStacks.includes(stack.idStack)}
-                onChange={() =>
-                  setSelectedStacks((prev) =>
-                    prev.includes(stack.idStack)
-                      ? prev.filter((id) => id !== stack.idStack)
-                      : [...prev, stack.idStack]
-                  )
-                }
-              />
-              <label htmlFor={`stack-${stack.idStack}`}>{stack.name}</label>
-            </div>
-          ))}
+          <div className="checkbox-container">
+            {stacks.map((stack) => (
+              <div key={stack.idStack} className="checkbox-stack">
+                <input
+                  type="checkbox"
+                  id={`stack-${stack.idStack}`}
+                  value={stack.idStack}
+                  checked={selectedStacks.includes(stack.idStack)}
+                  onChange={() =>
+                    setSelectedStacks((prev) =>
+                      prev.includes(stack.idStack)
+                        ? prev.filter((id) => id !== stack.idStack)
+                        : [...prev, stack.idStack]
+                    )
+                  }
+                />
+                <label htmlFor={`stack-${stack.idStack}`}>{stack.name}</label>
+              </div>
+            ))}
+          </div>
         </fieldset>
 
-        <button type="submit">Ajouter</button>
-        <button type="button" onClick={onClose}>
-          Annuler
-        </button>
+        <div className="buttons-container">
+          <button type="submit" className="add-btn">
+            Ajouter
+          </button>
+          <button type="button" onClick={onClose} className="cancel-btn">
+            Annuler
+          </button>
+        </div>
       </form>
     </Modal>
   );

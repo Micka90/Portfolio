@@ -50,7 +50,6 @@ function Login() {
           token: data.accessToken,
         };
 
-        console.log('✅ Avant setAuth, userAuth :', userAuth);
         setAuth(userAuth);
 
         navigate('/Admin');

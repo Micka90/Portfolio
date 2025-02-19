@@ -1,0 +1,72 @@
+/*desktop*/
+
+.custom-modal {
+  background: white;
+  padding: 20px;
+  width: 90%;
+  max-width: 800px;
+  height: 80vh;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  border: black 1px solid;
+}
+
+.pdf-viewer {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.pdf-selector {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.pdf-selector button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #000000;
+  color: white;
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.pdf-selector button:hover {
+  transform: scale(1.05);
+  background-color: #020202;
+}
+
+.cv-close-btn {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: black;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.cv-close-btn:hover {
+  transform: scale(1.2);
+  color: red;
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  .custom-modal {
+    width: 95%;
+    height: 85vh;
+  }
+}

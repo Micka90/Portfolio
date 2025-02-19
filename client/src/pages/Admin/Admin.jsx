@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import AddProjectModal from '../../components/Modal/AddProjectModal';
 import ProjectModal from '../../components/Modal/ProjectModal';
+import './Admin.css';
 
 function Admin() {
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);

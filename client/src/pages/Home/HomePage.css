@@ -20,7 +20,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 60px;
+  margin-top: 25px;
 }
 
 .homedescription {
@@ -31,7 +31,7 @@
 
 /*Mobile*/
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .homepage {
     flex-direction: column;
   }
